@@ -9,56 +9,67 @@ except ImportError:
     def call_qwen_api(sentence, api_key, model_id): return "Error: Backend not loaded"
     def parse_fallacy_response(response_text): return ("PARSE_ERROR", response_text)
 
-import re # Added for transcript parsing
+import re # Added for transcript parsing - re may not be needed anymore by parser but kept for now
+import pysrt # Added for SRT parsing
+from typing import Tuple, List, Dict # For type hinting
 
 # Constants
 API_KEY = "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"
 MODEL_ID = "qwen/qwen3-32b"
 
-from typing import Tuple, List, Dict # For type hinting
 
-def parse_timestamped_transcript(transcript_content: str) -> Tuple[List[Dict[str, str]], List[str]]:
+def parse_srt_transcript(transcript_content: str) -> Tuple[List[Dict[str, str]], List[str]]:
     """
-    Parses a timestamped transcript string into a list of segment dictionaries
-    and a list of parsing error messages.
+    Parses an SRT transcript string into a list of segment dictionaries
+    and a list of parsing error messages using pysrt.
 
     Args:
-        transcript_content: The entire content of the transcript file as a string.
+        transcript_content: The entire content of the SRT transcript file as a string.
 
     Returns:
         A tuple containing:
             - parsed_segments: A list of dictionaries, where each dictionary
                                represents a transcript segment.
             - parsing_errors: A list of strings, where each string is an
-                              error message for a line that couldn't be parsed.
+                              error message if parsing fails.
     """
     parsed_segments: List[Dict[str, str]] = []
     parsing_errors: List[str] = []
-    # Regex to capture: ID, Start Time, End Time, Speaker, Text
-    # Example line: "503 00:43:29,413 --> 00:43:39,295 [SPEAKER_01]: Some text here"
-    segment_pattern = re.compile(
-        r"^\s*(\d+)\s+(\d{2}:\d{2}:\d{2},\d{3})\s+-->\s+(\d{2}:\d{2}:\d{2},\d{3})\s+\[(SPEAKER_\d+)\]:\s*(.+?)\s*$"
-    )
 
-    for i, line in enumerate(transcript_content.splitlines()):
-        stripped_line = line.strip()
-        if not stripped_line: # Skip empty or whitespace-only lines silently
-            continue
+    try:
+        subs = pysrt.from_string(transcript_content, error_handling=pysrt.ERROR_PASS)
         
-        match = segment_pattern.match(stripped_line)
-        if match:
+        if not subs and transcript_content.strip(): # File has content but pysrt couldn't parse any subs
+             parsing_errors.append(
+                "The SRT file content could not be parsed by pysrt, or it resulted in no valid subtitle segments. "
+                "Please ensure it is a valid SRT format."
+            )
+             return parsed_segments, parsing_errors
+
+
+        for sub_item in subs:
+            start_time_str = (
+                f"{sub_item.start.hours:02}:{sub_item.start.minutes:02}:"
+                f"{sub_item.start.seconds:02},{sub_item.start.milliseconds:03}"
+            )
+            end_time_str = (
+                f"{sub_item.end.hours:02}:{sub_item.end.minutes:02}:"
+                f"{sub_item.end.seconds:02},{sub_item.end.milliseconds:03}"
+            )
             segment = {
-                "id": match.group(1),
-                "start_time": match.group(2),
-                "end_time": match.group(3),
-                "speaker": match.group(4),
-                "text": match.group(5).strip()
+                "id": str(sub_item.index),
+                "start_time": start_time_str,
+                "end_time": end_time_str,
+                "speaker": f"SPEAKER_SRT_{sub_item.index}",  # Unique speaker ID for each SRT segment
+                "text": sub_item.text_without_tags  # Or sub_item.text
             }
             parsed_segments.append(segment)
-        else:
-            parsing_errors.append(
-                f"Skipped line {i+1}: '{stripped_line}' - did not match expected format."
-            )
+            
+    except Exception as e: # Catch any exception from pysrt.from_string itself
+        parsing_errors.append(f"Failed to parse SRT file due to an unexpected error: {str(e)}")
+        # Return empty segments as parsing fundamentally failed
+        return [], parsing_errors
+        
     return parsed_segments, parsing_errors
 
 # Page Configuration and Title
@@ -74,8 +85,8 @@ uploaded_video_file = st.file_uploader(
 )
 
 uploaded_transcript_file = st.file_uploader(
-    "Upload Timestamped Transcript File",
-    type=['txt', 'vtt'],
+    label="Upload SRT Transcript File (.srt)", # Updated label
+    type=['srt'],                             # Updated file type
     key="transcript_uploader"
 )
 
@@ -105,9 +116,10 @@ if analyze_button:
             if not transcript_content.strip():
                 st.error("Uploaded transcript file is empty or contains only whitespace. Cannot proceed with analysis.")
             else:
-                parsed_segments, parsing_errors = parse_timestamped_transcript(transcript_content)
+                # Updated to call the new SRT parser
+                parsed_segments, parsing_errors = parse_srt_transcript(transcript_content)
 
-                if parsing_errors:
+                if parsing_errors: # Display errors from pysrt parsing attempt
                     with st.expander("View Transcript Parsing Issues", expanded=True):
                         for error_msg in parsing_errors:
                             st.warning(error_msg)
