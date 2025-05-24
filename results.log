@@ -1,0 +1,51 @@
+Sentence|Fallacy Type|Rationale|Latency (ms)
+Your fashion sense is so bad, it's no wonder you can't make a good argument about economic policy.|Ad Hominem|Attacks the person's fashion sense instead of addressing their economic policy argument.|793.52
+My opponent wants to improve our parks, which clearly means he's happy to ignore the homeless crisis!|Straw Man. The argument misrepresents the opponent's position by falsely equating support for park improvements with ignoring the homeless crisis.||729.20
+If we legalize marijuana, then everyone will start using harder drugs, and society will collapse.|Slippery Slope|The argument assumes legalizing marijuana will inevitably lead to extreme consequences (harder drug use, societal collapse) without evidence of a direct causal chain.|559.84
+You must either be a complete genius or a total idiot; there's no in-between.|False Dichotomy|The statement presents only two extreme options (genius or idiot) as if no middle ground exists, ignoring other possibilities.|616.23
+Just imagine the joy on a child's face if you donate to this cause; how could you refuse?|Appeal to Emotion|Uses emotional imagery of a child's joy to pressure donation, bypassing logical argumentation.|659.99
+The sun rises in the east and sets in the west.|FORMAT_ERROR|None. The statement is a factual observation about the sun's movement and does not contain any logical fallacy.|469.50
+What is your favorite color?|None||613.01
+This report indicates a 10% increase in sales over the last quarter.|None||502.39
+I believe that investing in renewable energy is crucial for the future.|None||490.90
+He's a terrible singer, so his views on climate change must be wrong.|Ad Hominem|Attacks the person's singing ability instead of addressing their climate change views.|561.61
+The new city council member wants to cut funding for the library; clearly, she wants our children to grow up ignorant.|Straw Man. The argument misrepresents the council member's position by equating funding cuts to a desire for children's ignorance, ignoring potential alternative reasons.||785.92
+If we allow students to use tablets in class, they'll soon forget how to write by hand, and then literacy rates will plummet.|Slippery Slope|Assumes allowing tablets will inevitably lead to plummeting literacy without evidence of a direct causal chain.|627.18
+Either you support my plan completely, or you're against our company's success.|False Dichotomy|Presents only two extreme options (complete support or opposition) while ignoring possible middle grounds.|518.12
+Please, think of the suffering animals; we have to pass this new animal welfare bill right now!|Appeal to Emotion|The argument uses emotional appeals about animal suffering to pressure support for the bill, bypassing logical reasoning.|539.38
+The capital of France is Paris.|None||566.86
+What time does the train to London depart?|FORMAT_ERROR|None.|563.30
+Research suggests that a balanced diet contributes to good health.|None||659.94
+Many people enjoy walking in the park during autumn.|None||460.75
+You wouldn't understand the complexities of this issue; you didn't even go to college.|Ad Hominem. The argument attacks the person's educational background instead of addressing the issue itself.||504.46
+So you think we should invest more in public transportation? It's clear you want to bankrupt the city with your wild spending ideas.|Straw Man. The argument misrepresents the proposal to invest in public transportation as an intent to "bankrupt the city with wild spending," exaggerating and distorting the original claim.||819.12
+If we let them build that new apartment complex, traffic will become unbearable, and our quiet neighborhood will be ruined forever.|Slippery Slope. The argument assumes that building the apartment complex will inevitably lead to extreme negative consequences without justifying the causal chain.||728.68
+It's simple: either we increase military spending, or we leave ourselves vulnerable to attack.|False Dichotomy|Presents only two extreme options (increase military spending or vulnerability) while ignoring potential alternatives.|523.80
+Look at these heartbreaking images of disaster victims; you must donate to our relief fund.|Appeal to Emotion|Uses emotional imagery to pressure donation without logical argument.|482.52
+The Earth revolves around the Sun.|None||669.51
+How many cups of coffee do you drink per day?|None||546.60
+The company's stock price increased by 5% yesterday.|None||490.65
+Public speaking can be a challenging skill to master.|FORMAT_ERROR|None.|552.55
+Only a fool would disagree with my assessment of the political situation.|Ad Hominem|Disparages opponents as "fools" instead of addressing their arguments.|786.41
+The proposal is to reduce taxes for the wealthy, which is clearly an attempt to make the poor even poorer.|Straw Man. The argument misrepresents the tax proposal as an intentional effort to harm the poor, distorting its actual intent.||879.54
+If we don't ban this video game, our children will all become violent criminals.|Slippery Slope|The argument assumes that not banning the video game will inevitably lead to all children becoming violent criminals, without providing evidence for such an extreme and direct causal chain.|415.70
+You're either with us or against us in this important matter.|False Dichotomy|Presents a false binary choice between two extremes, ignoring possible middle ground or alternative positions.|631.82
+This puppy has been abandoned and needs a loving home; how can you turn your back on such a defenseless creature?|Appeal to Emotion|The argument uses emotional language ("defenseless creature") to manipulate sympathy rather than logical reasoning.|570.39
+Water boils at 100 degrees Celsius at sea level.|None||549.66
+What are your plans for the weekend?|None||575.09
+The latest inflation figures are a cause for concern among economists.|None||579.92
+Learning a new language can open up many opportunities.|FORMAT_ERROR|None.|469.06
+Given his criminal record, his testimony about the incident is completely unreliable.|Ad Hominem|Dismisses the testimony based on the person's criminal record rather than the content of the testimony itself.|588.31
+You say we need more environmental regulations? So you want to destroy businesses and jobs, do you?|Straw Man|The argument misrepresents the original claim about environmental regulations as an intent to destroy businesses and jobs, exaggerating and distorting the position.|525.15
+If we allow a single exception to this rule, the entire system will break down.|Slippery Slope|Suggests a single exception will inevitably lead to total system collapse without evidence of such a chain reaction.|548.46
+We must either adopt this new software immediately or face becoming obsolete in the market.|False Dichotomy|The statement presents only two extreme options (adopt immediately or become obsolete) while ignoring potential middle-ground solutions or alternatives.|574.48
+Don't you feel a surge of pride when you hear our national anthem? That's why our policies are the best.|Appeal to Emotion|The argument uses emotional pride from the national anthem to justify policy superiority without logical connection.|598.77
+The Pacific Ocean is the largest ocean on Earth.|None||454.45
+What is the best way to learn to play the guitar?|None||505.64
+The government announced new guidelines for international travel.|None||492.55
+It's important to consider all viewpoints before making a decision.|None||627.51
+He's affiliated with that political party, so everything he says is biased and untrustworthy.|Ad Hominem|Discredits the person based on political affiliation rather than addressing their argument.|462.01
+My opponent advocates for stricter gun control. It's obvious he wants to disarm all law-abiding citizens and leave them defenseless.|Straw Man. The argument misrepresents the opponent's position by exaggerating it to an extreme, implying they advocate for complete disarmament rather than just stricter gun control.||482.28
+If you don't get a perfect score on this test, you'll never get into a good university, and your future will be ruined.|Slippery Slope|The statement exaggerates the consequences of not getting a perfect score, implying an inevitable chain of negative outcomes without evidence.|668.69
+You can either accept the job offer as it is, or you can remain unemployed.|False Dichotomy|Presents only two options (accept job or remain unemployed) when other possibilities exist, such as negotiating terms or seeking alternative employment.|518.77
+Think of the brave soldiers who fought for our freedom; supporting this war is the only patriotic choice.|Appeal to Emotion|Uses emotional appeal to soldiers' sacrifices to pressure support for the war, ignoring logical evaluation.|762.94
