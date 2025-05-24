@@ -17,6 +17,10 @@ from typing import Tuple, List, Dict # For type hinting
 API_KEY = "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"
 MODEL_ID = "qwen/qwen3-32b"
 
+# Initialize session state for video seek time
+if 'video_seek_time' not in st.session_state:
+    st.session_state.video_seek_time = 0.0
+
 
 def parse_srt_transcript(transcript_content: str) -> Tuple[List[Dict[str, str]], List[str]]:
     """
@@ -72,6 +76,39 @@ def parse_srt_transcript(transcript_content: str) -> Tuple[List[Dict[str, str]],
         
     return parsed_segments, parsing_errors
 
+def timestamp_to_seconds(ts_str: str) -> float:
+    """
+    Converts a timestamp string "HH:MM:SS,mmm" to total seconds.
+    Returns 0.0 on parsing error and prints an error message.
+    """
+    try:
+        parts = ts_str.split(':')
+        if len(parts) != 3:
+            raise ValueError("Timestamp format error: Expected 3 parts separated by ':'")
+        
+        h = int(parts[0])
+        m = int(parts[1])
+        
+        sec_ms_part = parts[2]
+        if ',' not in sec_ms_part:
+            raise ValueError("Timestamp format error: Expected ',' separating seconds and milliseconds")
+            
+        sec_ms = sec_ms_part.split(',')
+        if len(sec_ms) != 2:
+            raise ValueError("Timestamp format error: Expected 2 parts for seconds and milliseconds")
+            
+        s = int(sec_ms[0])
+        ms = int(sec_ms[1])
+        
+        total_seconds = h * 3600 + m * 60 + s + ms / 1000.0
+        return total_seconds
+    except ValueError as e:
+        print(f"Error converting timestamp '{ts_str}': {e}")
+        return 0.0
+    except Exception as e: # Catch any other unexpected errors during parsing
+        print(f"An unexpected error occurred converting timestamp '{ts_str}': {e}")
+        return 0.0
+
 # Page Configuration and Title
 st.set_page_config(page_title="Live Fallacy Checker", layout="wide")
 st.title("Live Fallacy Checker")
@@ -107,8 +144,8 @@ if analyze_button:
             st.subheader("Transcript Analysis Results")
             st.markdown("---") # Visual separator
 
-            # Display the video if uploaded
-            st.video(uploaded_video_file)
+            # Display the video if uploaded, using session state for start_time
+            st.video(uploaded_video_file, start_time=int(st.session_state.video_seek_time))
             st.markdown("---") # Separator after video
 
             transcript_content = uploaded_transcript_file.getvalue().decode("utf-8")
@@ -200,6 +237,17 @@ if analyze_button:
                         for i, result in enumerate(analysis_results_list): # Added enumerate for unique keys
                             st.markdown(f"**Time:** {result['start_time']} - {result['end_time']}")
                             st.markdown(f"**Speaker:** {result['speaker']}")
+
+                            # Add "Jump to this moment" button
+                            seek_time_seconds = timestamp_to_seconds(result['start_time'])
+                            button_label = f"Jump to video at {result['start_time']}"
+                            button_key = f"jump_button_{i}"
+                            
+                            if st.button(button_label, key=button_key):
+                                st.session_state.video_seek_time = float(seek_time_seconds)
+                                # Streamlit will rerun from top. st.video will use the updated session_state.
+                                # No explicit st.experimental_rerun() needed here.
+
                             # Using a unique key for each text_area
                             st.text_area("Analyzed Text:", 
                                          value=result['original_text'].replace('$', '\\$'), 
