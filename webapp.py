@@ -1,5 +1,7 @@
 import streamlit as st
 import time # For timing
+import dotenv
+import os
 # Attempt to import from fallacy_checker, ensure it doesn't break if fallacy_checker has issues on import for now
 try:
     from fallacy_checker import call_qwen_api, parse_fallacy_response
@@ -9,8 +11,10 @@ except ImportError:
     def call_qwen_api(sentence, api_key, model_id): return "Error: Backend not loaded"
     def parse_fallacy_response(response_text): return ("PARSE_ERROR", response_text)
 
+dotenv.load_dotenv()
+
 # Constants
-API_KEY = "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"
+API_KEY = os.environ['OPENROUTER_API_KEY']
 MODEL_ID = "qwen/qwen3-32b"
 
 # Page Configuration and Title
