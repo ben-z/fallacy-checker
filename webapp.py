@@ -29,7 +29,7 @@ if analyze_button:
     if user_sentence.strip():
         st.subheader("Analysis Results")
         st.markdown("---") # Visual separator
-        st.write(f"**Input Sentence:** {user_sentence}") # Show what was analyzed
+        st.write(f"**Input Sentence:** {user_sentence.replace("$", "\\$")}") # Show what was analyzed
 
         raw_api_response = "" # Initialize
         fallacy_type = None   # Initialize
@@ -69,7 +69,7 @@ if analyze_button:
         # Display Rationale only if a valid fallacy was detected and rationale exists
         if not raw_api_response.startswith("Error:") and fallacy_type and fallacy_type != "FORMAT_ERROR" and rationale_text:
             st.markdown("#### Rationale:")
-            st.write(rationale_text)
+            st.write(rationale_text.replace("$", "\\$"))
         
         # Display Processing Time (always, if analysis was attempted)
         st.markdown("#### Processing Time:")
