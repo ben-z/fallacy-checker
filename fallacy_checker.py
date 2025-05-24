@@ -353,38 +353,50 @@ def parse_fallacy_response(response_text: str) -> tuple[str | None, str | None]:
             return (None, None) 
 
     prefix = "FALLACY_TYPE: "
+    known_fallacies_list_for_primary_path = ["Ad Hominem", "Appeal to Authority", "Appeal to Emotion", "Circular Reasoning", "False Dichotomy", "Hasty Generalization", "Post Hoc Ergo Propter Hoc", "Slippery Slope", "Straw Man"]
+
+
     if response_text_stripped.startswith(prefix):
-        remaining_text = response_text_stripped[len(prefix):]
-        # Try to split by ". Rationale: " first
-        parts = remaining_text.split(". Rationale: ", 1)
-        if len(parts) == 2: # Successfully split
-            actual_fallacy_name = parts[0].strip()
-            actual_rationale = parts[1].strip()
-        else: # Split failed, maybe the format is "FALLACY_TYPE: FallacyName Rationale: ..." (missing period)
-              # Or "FALLACY_TYPE: FallacyName: Rationale..."
-            parts_alt_split = remaining_text.split(" Rationale: ", 1) # Try splitting by " Rationale: " (space instead of period)
-            if len(parts_alt_split) == 2:
-                actual_fallacy_name = parts_alt_split[0].strip()
-                actual_rationale = parts_alt_split[1].strip()
-            else: # Still not matching, try splitting by just ":" if it's "FALLACY_TYPE: FallacyName: Rationale"
-                parts_colon_split = remaining_text.split(":", 1)
-                if len(parts_colon_split) == 2:
-                    actual_fallacy_name = parts_colon_split[0].strip()
-                    actual_rationale = parts_colon_split[1].strip() # This might grab too much if rationale also has colons
-                                                                # but it's a fallback
-                else: # Last resort for this path, assume no clear rationale separator
-                    actual_fallacy_name = remaining_text.strip()
-                    actual_rationale = ""
+        remaining_text = response_text_stripped[len(prefix):].strip()
+        
+        # Sort known_fallacies by length in descending order to prioritize longer matches
+        # (e.g., "Post Hoc Ergo Propter Hoc" before "Post Hoc")
+        # This list is defined above for clarity, can be moved inside if preferred.
+        sorted_known_fallacies = sorted(known_fallacies_list_for_primary_path, key=len, reverse=True)
 
+        for fallacy_template in sorted_known_fallacies:
+            # Perform a case-insensitive check
+            if remaining_text.upper().startswith(fallacy_template.upper()):
+                # Determine the character immediately following the match in remaining_text
+                char_after_match = None
+                if len(remaining_text) > len(fallacy_template):
+                    char_after_match = remaining_text[len(fallacy_template)]
+                
+                # Condition for valid match:
+                # - char_after_match is None (remaining_text is exactly the fallacy name)
+                # - OR char_after_match is not a letter or digit
+                if char_after_match is None or not char_after_match.isalnum():
+                    actual_fallacy_name = fallacy_template # Use canonical casing
+                    
+                    rationale_text = remaining_text[len(fallacy_template):].strip()
+                    # Clean up the beginning of rationale_text
+                    actual_rationale = rationale_text.lstrip(' .:').strip()
+                    
+                    # Normalize common variations like "Appeal To Emotion" to "Appeal to Emotion"
+                    # This specific normalization might be redundant if fallacy_template is already canonical,
+                    # but can be kept if there's a chance fallacy_template itself isn't perfectly cased.
+                    # For now, assuming fallacy_template from known_fallacies_list_for_primary_path is canonical.
+                    # if " To " in actual_fallacy_name:
+                    #     actual_fallacy_name = actual_fallacy_name.replace(" To ", " to ")
 
-        actual_fallacy_name = actual_fallacy_name.replace("_", " ").title()
-        # Normalize common variations like "Appeal To Emotion" to "Appeal to Emotion"
-        if " To " in actual_fallacy_name: # Simple check for "To"
-            actual_fallacy_name = actual_fallacy_name.replace(" To ", " to ")
-
-        return (actual_fallacy_name, actual_rationale)
+                    return (actual_fallacy_name, actual_rationale)
+        
+        # If the loop completes without returning, no known fallacy was identified
+        # at the beginning of remaining_text according to the new logic.
+        return ("FORMAT_ERROR", response_text_stripped) # Or a more specific error/fallback
     else:
         # Fallback for direct fallacy name if "FALLACY_TYPE:" prefix is missing
+        # This known_fallacies list is used for the fallback path
         known_fallacies = ["Ad Hominem", "Appeal to Authority", "Appeal to Emotion", "Circular Reasoning", "False Dichotomy", "Hasty Generalization", "Post Hoc Ergo Propter Hoc", "Slippery Slope", "Straw Man"]
         
         # 2. Improve Fallback Path Logic
